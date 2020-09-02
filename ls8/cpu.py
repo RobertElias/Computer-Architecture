@@ -11,6 +11,9 @@ class CPU:
         self.ram =[0] * 256
         self.ram = [0] * 8
         self.pc = 0
+        self.LDI = 0b10000010
+        self.PRN = 0b01000111
+        self.HLT = 0b00000001
         self.is_running = True
 
     def load(self):
@@ -40,7 +43,8 @@ class CPU:
 
         if op == "ADD":
             self.reg[reg_a] += self.reg[reg_b]
-        #elif op == "SUB": etc
+        elif op == "SUB": 
+            self.reg[reg_a] -= self.reg[reg_b]
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -66,4 +70,5 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        pass
+        #pass
+        
