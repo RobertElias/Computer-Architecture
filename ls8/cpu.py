@@ -7,7 +7,13 @@ class CPU:
 
     def __init__(self):
         """Construct a new CPU."""
-        pass
+        self.pc = 0
+        self.reg = [0] * 8
+        self.LDI = 0b10000010
+        self.PRN = 0b01000111
+        self.HLT = 0b00000001
+        self.ram = [0] * 256
+        #self.is_running = True
 
     def load(self):
         """Load a program into memory."""
@@ -36,7 +42,8 @@ class CPU:
 
         if op == "ADD":
             self.reg[reg_a] += self.reg[reg_b]
-        #elif op == "SUB": etc
+        elif op == "SUB": 
+            self.reg[reg_a] -= self.reg[reg_b]
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -59,7 +66,43 @@ class CPU:
             print(" %02X" % self.reg[i], end='')
 
         print()
+    # ram_read function memory address register
+    def ram_read(self, MAR):
+        return self.ram[MAR]
+    # ram_write function memory data register
+    def ram_write(self, MAR, MDR):
+        self.ram[MAR] = MDR
 
     def run(self):
         """Run the CPU."""
-        pass
+        #pass
+        running = True
+        #while running instructions
+        while running:
+            IR = self.ram[self.pc]
+            #this will load immediate LDI if self.ldi
+            if IR == self.LDI:
+                self.ldi()
+            #this will print PRN if self.prn
+            if IR == self.PRN:
+                self.prn()
+            #this will halt HLT if self.hlt           
+            if IR == self.HLT:
+                running = self.hlt()
+    # hlt function
+    def hlt(self):
+        self.pc += 1
+        return False
+    
+    #ldi function
+    def ldi(self):
+        MAR = self.ram[self.pc + 1]
+        MDR = self.ram[self.pc + 2]
+        self.reg[MAR] = MDR
+        self.pc += 3
+    
+    #prn function
+    def prn(self):
+        MAR = self.ram[self.pc + 1]
+        print(self.reg[MAR])
+        self.pc +=2
