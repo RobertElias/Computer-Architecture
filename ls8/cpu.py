@@ -67,8 +67,29 @@ class CPU:
             print(" %02X" % self.reg[i], end='')
 
         print()
+    # ram_read function
+    def ram_read(self, mar):
+        return self.ram(mar)
+    # ram_write function
+    def ram_write(self, mar, mdr):
+        self.ram = mdr
 
     def run(self):
         """Run the CPU."""
         #pass
-        
+        running = True
+        #while running instructions
+        while running:
+            instruction = self.ram[self.pc]
+            #this will run LDI
+            if instruction == self.LDI:
+                self.ldi()
+            #this will run PRN
+            if instruction == self.PRN:
+                self.prn()
+            #this will run HLT    
+            if instruction == self.HLT:
+                running = self.hlt()
+
+    # hlt function
+    def hlt(self):
